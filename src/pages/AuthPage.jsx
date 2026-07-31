@@ -53,9 +53,8 @@ export default function AuthPage({ initialMode = 'login', onBackHome, onGuest })
   }
 
   function getRedirectUrl() {
-    if (typeof window === 'undefined') return undefined
-    return window.location.origin
-  }
+  return 'https://fit-progress-app.vercel.app'
+}
 
   async function sendMagicLink({ createUser = true } = {}) {
     const cleanEmail = cleanText(email, 254).toLowerCase()
