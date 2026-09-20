@@ -13,7 +13,8 @@ AS $$
   SELECT lower(coalesce(auth.jwt() ->> 'email', '')) = 'agencynula@gmail.com';
 $$;
 
-GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated, anon;
+REVOKE ALL ON FUNCTION public.is_admin() FROM public, anon;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
 
 -- 2) Utility to add CHECK constraints only when a table/column exists.
 CREATE OR REPLACE FUNCTION public.v15_add_check_if_column_exists(
@@ -196,7 +197,18 @@ BEGIN
   END IF;
 END $$;
 
--- 10) Public leaderboard RPC. Returns only display name + counts, not private workout rows.
+
+-- 10) Harden the convenience profile view if it exists.
+-- It is for trusted database/dashboard inspection and should not bypass table RLS.
+DO $
+BEGIN
+  IF to_regclass('public.profili_pregled') IS NOT NULL THEN
+    EXECUTE 'ALTER VIEW public.profili_pregled SET (security_invoker = true)';
+    EXECUTE 'REVOKE ALL ON public.profili_pregled FROM anon, authenticated';
+  END IF;
+END $;
+
+-- 11) Public leaderboard RPC. Returns only display name + counts, not private workout rows.
 CREATE OR REPLACE FUNCTION public.get_public_leaderboard()
 RETURNS TABLE (
   user_id uuid,
