@@ -1,16 +1,83 @@
-# React + Vite
+# Fit Progress
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fitness-tracking web application built with React and Supabase for managing workouts, nutrition, measurements, goals, and personal progress.
 
-Currently, two official plugins are available:
+**Live demo:** https://fit-progress-zeta.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Overview
 
-## React Compiler
+Fit Progress is a practical fitness dashboard designed to bring multiple parts of personal fitness tracking into one application. It combines authentication, onboarding, progress tracking, reports, and a mobile-friendly PWA experience.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The project also includes a guest/demo mode and an administration area for managing users, feedback, account state, activity, and future subscription workflows.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- User authentication with Supabase
+- Guided onboarding
+- Workout tracking
+- Nutrition and meal tracking
+- Body measurements
+- Goals and progress reporting
+- Weekly plans
+- Leaderboard
+- Water and activity tracking
+- Guest/demo mode with sample data
+- PWA support
+- User feedback workflow
+- Admin dashboard
+- Account status controls
+- Basic subscription-status workflow
+- Macedonian and English interface
+
+## Tech Stack
+
+- **React 19**
+- **Vite**
+- **Supabase**
+- **Recharts**
+- **Vite PWA / Workbox**
+- **JavaScript**
+- **CSS**
+
+## What I worked on
+
+I worked on the product structure, dashboard UI, authentication flow, onboarding, workout and nutrition flows, measurements, goals, reports, guest mode, PWA behaviour, Supabase integration, and deployment.
+
+The newer version of the application also includes an owner/admin dashboard with user activity, feedback handling, account controls, demo analytics, and preparation for future monetisation features.
+
+## Application Structure
+
+The application is organised around separate functional pages for:
+
+```text
+Dashboard
+Workouts
+Nutrition
+Measurements
+Plans
+Reports
+Leaderboard
+Settings
+Admin
+Guest / Demo
+```
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Environment values are kept outside the repository. Create your own local environment file when connecting a Supabase project.
+
+## What I learned
+
+This project gave me hands-on experience with building a larger React application, organising multiple feature flows, working with authentication and user-specific data, integrating charts and reporting, handling admin functionality, and improving a web app through iteration.
+
+## Author
+
+**Riste Kozarev**  
+Software Engineer focused on web applications, energy technology, and practical digital products.
+
+Portfolio: https://riste-kozarev.netlify.app/
