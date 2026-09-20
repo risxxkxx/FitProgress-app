@@ -200,13 +200,13 @@ END $$;
 
 -- 10) Harden the convenience profile view if it exists.
 -- It is for trusted database/dashboard inspection and should not bypass table RLS.
-DO $
+DO $$
 BEGIN
   IF to_regclass('public.profili_pregled') IS NOT NULL THEN
     EXECUTE 'ALTER VIEW public.profili_pregled SET (security_invoker = true)';
     EXECUTE 'REVOKE ALL ON public.profili_pregled FROM anon, authenticated';
   END IF;
-END $;
+END $$;
 
 -- 11) Public leaderboard RPC. Returns only display name + counts, not private workout rows.
 CREATE OR REPLACE FUNCTION public.get_public_leaderboard()
