@@ -22,12 +22,13 @@ npx web-push generate-vapid-keys
 VITE_VAPID_PUBLIC_KEY=<јавниот клуч>
 ```
 
-Приватниот клуч НИКОГАШ не оди во апликацијата — само во Supabase Edge Function secrets:
+Приватниот VAPID клуч и `REMINDER_CRON_SECRET` НИКОГАШ не одат во frontend апликацијата или GitHub — само во Supabase Edge Function secrets:
 
 ```bash
 supabase secrets set VAPID_PUBLIC_KEY=<јавниот клуч>
 supabase secrets set VAPID_PRIVATE_KEY=<приватниот клуч>
 supabase secrets set VAPID_SUBJECT=mailto:твојот-емаил@пример.com
+supabase secrets set REMINDER_CRON_SECRET=<долг-случаен-server-only-secret>
 ```
 
 ## 3. Деплојирај ја Edge Function-та
@@ -41,6 +42,7 @@ supabase functions deploy send-reminders
 ```bash
 curl -X POST https://<project-ref>.functions.supabase.co/send-reminders \
   -H "Authorization: Bearer <ANON_KEY>" \
+  -H "X-Cron-Secret: <REMINDER_CRON_SECRET>" \
   -H "Content-Type: application/json" \
   -d '{"title":"Тренинг потсетник","body":"Време е за тренинг 💪"}'
 ```
@@ -61,7 +63,11 @@ select cron.schedule(
   $$
   select net.http_post(
     url := 'https://<project-ref>.functions.supabase.co/send-reminders',
-    headers := jsonb_build_object('Authorization', 'Bearer <ANON_KEY>', 'Content-Type', 'application/json'),
+    headers := jsonb_build_object(
+      'Authorization', 'Bearer <ANON_KEY>',
+      'X-Cron-Secret', '<REMINDER_CRON_SECRET>',
+      'Content-Type', 'application/json'
+    ),
     body := jsonb_build_object('title', 'Тренинг потсетник', 'body', 'Не заборавај на денешниот тренинг!')
   );
   $$
@@ -74,3 +80,10 @@ Web Push на iOS работи **само** ако корисникот прво
 "Add to Home Screen" во Safari (веќе е објаснето во апликацијата, Поставки → Инсталирај
 на телефон). Ако само ја отвора во обичен Safari таб, копчето "Вклучи известувања" нема
 да функционира — апликацијата веќе го препознава ова и го известува корисникот.
+
+
+## Безбедносна забелешка
+
+`SUPABASE_SERVICE_ROLE_KEY`, `VAPID_PRIVATE_KEY` и `REMINDER_CRON_SECRET` се server-only secrets.
+Не ги ставај во `.env` што го чита Vite, во source code, screenshots или GitHub commits.
+`VITE_*` променливите се вградуваат во browser bundle и по дефиниција не се тајни.
