@@ -49,7 +49,7 @@ where p.user_id = u.id;
 
 -- Open this view in Supabase Table Editor when you want a clean readable list.
 -- It shows email, name and surname first instead of starting with UUID columns.
-create or replace view profili_pregled as
+create or replace view public.profili_pregled with (security_invoker = true) as
 select
   coalesce(p.email, lower(u.email)) as email,
   coalesce(p.ime, u.raw_user_meta_data ->> 'ime', split_part(coalesce(p.full_name, u.raw_user_meta_data ->> 'full_name', ''), ' ', 1)) as ime,
@@ -67,6 +67,9 @@ select
   p.updated_at
 from profili p
 left join auth.users u on u.id = p.user_id;
+
+-- This view is intended for trusted database/dashboard inspection, not the public API.
+revoke all on public.profili_pregled from anon, authenticated;
 
 -- Goals
 create table if not exists goals (
