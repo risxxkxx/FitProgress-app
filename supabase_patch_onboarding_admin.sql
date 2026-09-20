@@ -132,7 +132,7 @@ create policy "Admin manage account_status" on public.account_status for all usi
 drop policy if exists "Users read own account_status" on public.account_status;
 create policy "Users read own account_status" on public.account_status for select using (auth.uid() = user_id);
 
-create or replace view public.profili_pregled as
+create or replace view public.profili_pregled with (security_invoker = true) as
 select
   p.email,
   p.ime,
@@ -156,5 +156,8 @@ select
 from public.profili p
 left join public.account_status a on a.user_id = p.user_id
 left join public.subscriptions s on s.user_id = p.user_id;
+
+-- Keep the database inspection view out of anon/authenticated API access.
+revoke all on public.profili_pregled from anon, authenticated;
 
 notify pgrst, 'reload schema';
