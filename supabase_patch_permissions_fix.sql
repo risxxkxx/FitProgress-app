@@ -14,7 +14,12 @@
 grant usage on schema public to authenticated, anon;
 grant all on all tables in schema public to authenticated;
 grant all on all sequences in schema public to authenticated;
-grant select on all tables in schema public to anon;
+
+-- Do not grant anonymous users blanket access to every table.
+-- Public/anonymous features must receive explicit, table-specific grants and RLS policies.
+revoke all on all tables in schema public from anon;
+alter default privileges in schema public revoke all on tables from anon;
+
 alter default privileges in schema public grant all on tables to authenticated;
 alter default privileges in schema public grant all on sequences to authenticated;
 
